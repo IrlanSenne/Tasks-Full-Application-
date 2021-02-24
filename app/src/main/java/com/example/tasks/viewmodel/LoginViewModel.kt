@@ -2,25 +2,39 @@ package com.example.tasks.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.tasks.service.HeaderModel
+import com.example.tasks.service.constants.TaskConstants
 import com.example.tasks.service.listener.ApiListener
+import com.example.tasks.service.listener.ValidationListener
+import com.example.tasks.service.repository.local.SecurityPreferences
 import com.example.tasks.service.repository.remote.PersonRepository
 
-class LoginViewModel(application: Application) : AndroidViewModel(application){
+class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
-private val mRersonRepository = PersonRepository()
+    private val mRersonRepository = PersonRepository(application)
+    private val mSharedPreferences = SecurityPreferences(application)
 
-    /**
-     * Faz login usando API
-     */
+    private val mLogin = MutableLiveData<ValidationListener>()
+    var login: LiveData<ValidationListener> = mLogin
+
+            /**
+             * Faz login usando API
+             */
     fun doLogin(email: String, password: String) {
-        mRersonRepository.login(email, password, object: ApiListener{
+        mRersonRepository.login(email, password, object : ApiListener {
             override fun onSuccess(model: HeaderModel) {
-                TODO("Not yet implemented")
+
+                mSharedPreferences.store(TaskConstants.SHARED.TOKEN_KEY,model.token)
+                mSharedPreferences.store(TaskConstants.SHARED.PERSON_KEY,model.personKey)
+                mSharedPreferences.store(TaskConstants.SHARED.PERSON_NAME,model.name)
+
+                mLogin.value = ValidationListener()
             }
 
             override fun onFalirure(str: String) {
-                TODO("Not yet implemented")
+                mLogin.value = ValidationListener(str)
             }
 
         })
