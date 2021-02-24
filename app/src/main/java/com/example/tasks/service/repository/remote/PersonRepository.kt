@@ -35,4 +35,26 @@ class PersonRepository(val context: Context) {
 
         })
     }
+
+    fun create(name: String, email: String, password: String, listener: ApiListener) {
+
+
+            val call: Call<HeaderModel> = mRemote.create(name, email, password)
+            call.enqueue(object : Callback<HeaderModel> {
+                override fun onFailure(call: Call<HeaderModel>, t: Throwable) {
+                    listener.onFalirure(context.getString(R.string.ERROR_UNEXPECTED))
+                }
+
+            override fun onResponse(call: Call<HeaderModel>, response: Response<HeaderModel>) {
+                if(response.code() != TaskConstants.HTTP.SUCCESS) {
+                    val validation = Gson().fromJson(response.errorBody()!!.toString(), String::class.java)
+                    listener.onFalirure(validation)
+                }else {
+                    response.body()?.let { listener.onSuccess(it) }
+                }
+
+            }
+
+        })
+    }
 }

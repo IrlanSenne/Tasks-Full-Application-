@@ -57,11 +57,18 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
      */
     private fun observe() {
         mViewModel.login.observe(this, Observer {
-            if(it.success()) {
+            if (it.success()) {
                 startActivity(Intent(this, MainActivity::class.java))
-            }else {
-                val message = it.failure()
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+                finish()
+            } else {
+                Toast.makeText(applicationContext, it.failure(), Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        mViewModel.logedUser.observe(this, Observer {
+            if (it) {
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
             }
         })
     }
@@ -75,5 +82,6 @@ class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
         mViewModel.doLogin(email, password)
     }
+
 
 }
