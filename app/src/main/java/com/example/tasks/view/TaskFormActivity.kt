@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.DatePicker
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.observe
 import com.example.tasks.R
 import com.example.tasks.service.model.TaskModel
 import com.example.tasks.viewmodel.TaskFormViewModel
@@ -18,6 +19,7 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener, DatePickerDi
     private lateinit var mViewModel: TaskFormViewModel
     private val mDateFormat = java.text.SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
     private val mListPriorityId : MutableList<Int> = arrayListOf()
+    private var mTaskId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,12 +45,14 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener, DatePickerDi
 
     private fun handleSave() {
         val task = TaskModel().apply {
+            this.id = mTaskId
             this.description = edit_description.text.toString()
             this.complete = check_complete.isChecked
             this.dueDate = button_date.text.toString()
             this.priorityId = mListPriorityId[spinner_priority.selectedItemPosition]
         }
 
+        // Envia informação para ViewModel
         mViewModel.save(task)
     }
 
@@ -62,16 +66,15 @@ class TaskFormActivity : AppCompatActivity(), View.OnClickListener, DatePickerDi
 
     private fun observe() {
         mViewModel.priorities.observe(this, androidx.lifecycle.Observer {
-
-            val list: MutableList<String> = arrayListOf()
-            for (item in it) {
-                list.add(item.description)
-                mListPriorityId.add(item.id)
+            val list: MutableList<String> = ArrayList()
+            for (p in it) {
+                list.add(p.description)
+                mListPriorityId.add(p.id)
             }
 
+            // Cria adapter e usa no elemento
             val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, list)
             spinner_priority.adapter = adapter
-
         })
     }
 
