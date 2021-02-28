@@ -9,12 +9,13 @@ import com.example.tasks.service.constants.TaskConstants
 import com.example.tasks.service.listener.ApiListener
 import com.example.tasks.service.listener.ValidationListener
 import com.example.tasks.service.repository.local.SecurityPreferences
-import com.example.tasks.service.repository.remote.PersonRepository
+import com.example.tasks.service.repository.PersonRepository
 
 class RegisterViewModel(application: Application) : AndroidViewModel(application) {
 
 
-    private val mRersonRepository = PersonRepository(application)
+    private val mRersonRepository =
+        PersonRepository(application)
     private val mSharedPreferences = SecurityPreferences(application)
 
     private val mCreate = MutableLiveData<ValidationListener>()
@@ -22,7 +23,7 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
 
 
     fun create(name: String, email: String, password: String) {
-        mRersonRepository.create(name, email, password, object : ApiListener {
+        mRersonRepository.create(name, email, password, object : ApiListener<HeaderModel> {
             override fun onSuccess(model: HeaderModel) {
                 mSharedPreferences.store(TaskConstants.SHARED.TOKEN_KEY,model.token)
                 mSharedPreferences.store(TaskConstants.SHARED.PERSON_KEY,model.personKey)

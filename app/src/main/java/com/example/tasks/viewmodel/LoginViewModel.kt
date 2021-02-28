@@ -10,12 +10,13 @@ import com.example.tasks.service.listener.ApiListener
 import com.example.tasks.service.listener.ValidationListener
 import com.example.tasks.service.repository.PriorityRepository
 import com.example.tasks.service.repository.local.SecurityPreferences
-import com.example.tasks.service.repository.remote.PersonRepository
+import com.example.tasks.service.repository.PersonRepository
 import com.example.tasks.service.repository.remote.RetrofitClient
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val mRersonRepository = PersonRepository(application)
+    private val mRersonRepository =
+        PersonRepository(application)
     private val mPriorityRepository = PriorityRepository(application)
     private val mSharedPreferences = SecurityPreferences(application)
 
@@ -29,7 +30,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
              * Faz login usando API
              */
     fun doLogin(email: String, password: String) {
-        mRersonRepository.login(email, password, object : ApiListener {
+        mRersonRepository.login(email, password, object : ApiListener<HeaderModel> {
             override fun onSuccess(model: HeaderModel) {
 
                 mSharedPreferences.store(TaskConstants.SHARED.TOKEN_KEY,model.token)
