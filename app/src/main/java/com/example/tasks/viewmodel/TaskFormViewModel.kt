@@ -22,6 +22,9 @@ class TaskFormViewModel(application: Application) : AndroidViewModel(application
     private val mPriorityList = MutableLiveData<List<PriorityModel>>()
     var priorities: LiveData<List<PriorityModel>> = mPriorityList
 
+    private val mTask = MutableLiveData<TaskModel>()
+    var task: LiveData<TaskModel> = mTask
+
     fun listPriority() {
         mPriorityList.value =  mPriorityRepository.list()
     }
@@ -37,5 +40,20 @@ class TaskFormViewModel(application: Application) : AndroidViewModel(application
             }
 
         })
+    }
+
+    fun load(id: Int) {
+
+        mTaskRepository.load(id, object : ApiListener<TaskModel> {
+            override fun onSuccess(model: TaskModel) {
+              mTask.value = model
+            }
+
+            override fun onFalirure(str: String) {
+
+            }
+
+        })
+
     }
 }

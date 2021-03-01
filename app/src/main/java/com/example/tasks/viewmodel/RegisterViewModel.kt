@@ -24,7 +24,7 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
 
     fun create(name: String, email: String, password: String) {
         mRersonRepository.create(name, email, password, object : ApiListener<HeaderModel> {
-            override fun onSuccess(model: HeaderModel) {
+            override fun onSuccess(model: Boolean) {
                 mSharedPreferences.store(TaskConstants.SHARED.TOKEN_KEY,model.token)
                 mSharedPreferences.store(TaskConstants.SHARED.PERSON_KEY,model.personKey)
                 mSharedPreferences.store(TaskConstants.SHARED.PERSON_NAME,model.name)

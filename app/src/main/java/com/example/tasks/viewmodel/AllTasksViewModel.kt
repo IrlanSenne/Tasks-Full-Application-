@@ -4,9 +4,7 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.tasks.service.listener.ApiListener
-import com.example.tasks.service.model.PriorityModel
 import com.example.tasks.service.model.TaskModel
 import com.example.tasks.service.repository.TaskRepository
 
@@ -19,7 +17,7 @@ class AllTasksViewModel(application: Application) : AndroidViewModel(application
 
     fun list() {
         mTaskRepository.all(object: ApiListener<List<TaskModel>>{
-            override fun onSuccess(model: List<TaskModel>) {
+            override fun onSuccess(model: Boolean) {
                 mList.value = model
             }
 

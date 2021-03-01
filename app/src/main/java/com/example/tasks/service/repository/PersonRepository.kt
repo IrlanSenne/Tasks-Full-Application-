@@ -5,7 +5,6 @@ import com.example.tasks.R
 import com.example.tasks.service.model.HeaderModel
 import com.example.tasks.service.constants.TaskConstants
 import com.example.tasks.service.listener.ApiListener
-import com.example.tasks.service.model.TaskModel
 import com.example.tasks.service.repository.remote.PersonService
 import com.example.tasks.service.repository.remote.RetrofitClient
 import com.google.gson.Gson

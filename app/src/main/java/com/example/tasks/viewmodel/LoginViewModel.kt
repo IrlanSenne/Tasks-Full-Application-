@@ -31,7 +31,7 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
              */
     fun doLogin(email: String, password: String) {
         mRersonRepository.login(email, password, object : ApiListener<HeaderModel> {
-            override fun onSuccess(model: HeaderModel) {
+            override fun onSuccess(model: Boolean) {
 
                 mSharedPreferences.store(TaskConstants.SHARED.TOKEN_KEY,model.token)
                 mSharedPreferences.store(TaskConstants.SHARED.PERSON_KEY,model.personKey)
