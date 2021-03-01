@@ -62,6 +62,7 @@ class AllTasksFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         mAdapter.attachListener(mListener)
+        mViewModel.lis()
     }
 
     private fun observe() {}
