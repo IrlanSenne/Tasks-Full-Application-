@@ -30,30 +30,47 @@ class TaskFormViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun save(task: TaskModel) {
-        mTaskRepository.create(task, object  : ApiListener<Boolean> {
-            override fun onSuccess(model: Boolean) {
-                mValidation.value = ValidationListener()
-            }
+        if (task.id == 0) {
+            mTaskRepository.create(task, object : ApiListener<Boolean> {
 
-            override fun onFalirure(str: String) {
-                mValidation.value = ValidationListener(str)
-            }
+                override fun onSuccess(model: Boolean) {
+                    mValidation.value = ValidationListener()
+                }
 
-        })
+                override fun onFalirure(str: String) {
+                    mValidation.value = ValidationListener(str)
+                }
+
+            })
+        } else {
+            mTaskRepository.update(task, object : ApiListener<Boolean> {
+
+                override fun onSuccess(model: Boolean) {
+                    mValidation.value = ValidationListener()
+                }
+
+                override fun onFalirure(str: String) {
+                    mValidation.value = ValidationListener(str)
+                }
+
+            })
+        }
     }
 
-    fun load(id: Int) {
 
-        mTaskRepository.load(id, object : ApiListener<TaskModel> {
-            override fun onSuccess(model: TaskModel) {
-              mTask.value = model
-            }
+fun load(taskId: Int) {
 
-            override fun onFalirure(str: String) {
+    mTaskRepository.load(taskId, object : ApiListener<TaskModel> {
 
-            }
+        override fun onSuccess(model: TaskModel) {
+            mTask.value = model
+        }
 
-        })
+        override fun onFalirure(str: String) {
+            mTask.value = null
+            mValidation.value = ValidationListener(str)
+        }
 
-    }
+    })
+}
 }
